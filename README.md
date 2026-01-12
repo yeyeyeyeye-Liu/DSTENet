@@ -31,17 +31,15 @@ pip install -r requirements.txt
 
 3. Usage
 
+3.1 Model Training and Evaluation
+
 The implementation of the DSTENet model, as well as the training and testing procedures, are integrated into a single script: DSTENet.py.
 
 Training
-
 Model training can be started by running:
 ```bash
 python DSTENet.py --batch_size 4 --max_epoch 200 --lr 0.0005
 ```
-
-
-
 Key training parameters include:
 	•	--batch_size: batch size for training (default: 4)
 	•	--max_epoch: number of training epochs (default: 200)
@@ -50,29 +48,29 @@ Key training parameters include:
 	•	--class_num: number of output classes (default: 8)
 
 Testing / Evaluation
-
 The same script is used for model evaluation, depending on the configuration and checkpoint loading strategy defined in the code.
 
---------
+⸻
 
-4. Quick Demo (Minimal Running Example)
+3.2 Quick Demo (Minimal Running Example)
 
 To facilitate rapid understanding and reproducibility, a standalone demo script (demo.py) is provided.
 
-This script demonstrates:
-	•	How to load a representative multi-channel .npy input sample
-	•	How the input is preprocessed and forwarded through DSTENet
-	•	How to obtain a valid model output without training
+This demo illustrates a minimal and self-contained workflow, including:
+	•	Loading a representative multi-channel .npy input sample
+	•	Performing necessary preprocessing and type conversion
+	•	Forwarding the input through the DSTENet model
+	•	Producing a valid network output without model training
 
 The demo can be executed directly using:
 ```bash
 python demo.py
 ```
-The demo uses a small example dataset included in Data_instance.zip and is intended as a basic usage example to verify that the code, model architecture, and data format are correctly configured.
+The script relies on a small example dataset included in Data_instance.zip and is intended as a basic usage example to verify that the code, model architecture, and input data format are correctly configured.
 
 --------
 
-5. Data Availability and Format
+4. Data Availability and Format
 
 Data Availability
 
@@ -120,6 +118,6 @@ These raw datasets are preprocessed, spatially aligned, and integrated to form t
 
 --------
 
-6. License
+5. License
 
 This project is released under the MIT License. See the LICENSE file for details.
