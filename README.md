@@ -94,7 +94,7 @@ https://github.com/yeyeyeyeye-Liu/DSTENet.git
 Public Data Sources
 
 The raw data used to construct the dataset originate from the following publicly accessible sources:
-	•	Digital Elevation Model (DEM): Shuttle Radar Topography Mission (SRTM)
+•	Digital Elevation Model (DEM): Shuttle Radar Topography Mission (SRTM)
 	•	Remote sensing imagery: China Centre for Resources Satellite Data and Application
 	•	Lithology and soil data: ISRIC – World Soil Information
 	•	Vegetation data: National Cryosphere Desert Data Center
