@@ -8,6 +8,7 @@ A Deformable RoI Pooling and ConvNeXt–Transformer Integrated Approach for Iden
 
 under review at *Computers & Geosciences*.
 
+--------
 
 1. Environment
 
@@ -16,6 +17,7 @@ under review at *Computers & Geosciences*.
 
 The main dependencies are listed in `requirements.txt`.
 
+--------
 
 2. Installation
 
@@ -24,6 +26,7 @@ The required Python dependencies can be installed using:
 ```bash
 pip install -r requirements.txt
 
+--------
 
 3. Usage
 
@@ -46,30 +49,52 @@ Testing / Evaluation
 
 The same script is used for model evaluation, depending on the configuration and checkpoint loading strategy defined in the code.
 
+--------
 
 4. Data Availability and Format
 
-The dataset used in this study is not publicly available due to regional data restrictions, but can be obtained from the corresponding author upon reasonable request.
+Data Availability
+
+The dataset used in this study is not fully publicly available due to regional data-sharing restrictions.
+However, a representative example data file is provided in the public code repository to illustrate the data structure and input format used by the proposed method.
+
+The complete dataset can be obtained from the corresponding author upon reasonable academic request.
+
+⸻
 
 Data Format
-	•	Input data are stored as .npy files with a spatial size of 1280 × 1280
-	•	Each sample contains 8 channels, including:
-	•	Digital Elevation Model (DEM)
-	•	Four-band remote sensing imagery
-	•	Lithology
-	•	Soil
-	•	Vegetation
-	•	File paths and labels are organized in a .json file
-	•	Data are loaded using a custom Dataset class implemented in the code
+
+All input samples are stored as NumPy binary files (.npy) with a fixed spatial resolution of 1280 × 1280 pixels.
+Each sample consists of 8 channels, organized as follows:
+	1.	Channel 1: Digital Elevation Model (DEM)
+	2.	Channels 2–5: Four-band remote sensing imagery
+	3.	Channel 6: Lithology
+	4.	Channel 7: Soil
+	5.	Channel 8: Vegetation
+
+To ensure spatial consistency, all data layers are resampled or padded to a uniform size of 1280 × 1280 before being stacked into an 8-channel array.
+
+A representative example file (Data_instance.npy.zip) is publicly available at the following repository to demonstrate the exact data structure and channel ordering used in this study:
+
+https://github.com/yeyeyeyeye-Liu/DSTENet.git
+
+This example data file is intended solely for illustrating the data format and does not represent the full dataset used for model training and evaluation.
+
+File paths and corresponding class labels are organized using a .json file, and the data are loaded through a custom Dataset class implemented in the provided code.
+
+⸻
 
 Public Data Sources
 
-Raw data used to construct the dataset can be obtained from the following public sources:
-	•	DEM: SRTM (https://srtm.csi.cgiar.org/)
-	•	Remote sensing imagery: China Centre for Resources Satellite Data and Application (https://data.cresda.cn/)
-	•	Lithology and soil: ISRIC (https://data.isric.org/)
-	•	Vegetation: National Cryosphere Desert Data Center (http://www.ncdc.ac.cn/)
+The raw data used to construct the dataset originate from the following publicly accessible sources:
+	•	Digital Elevation Model (DEM): Shuttle Radar Topography Mission (SRTM)
+	•	Remote sensing imagery: China Centre for Resources Satellite Data and Application
+	•	Lithology and soil data: ISRIC – World Soil Information
+	•	Vegetation data: National Cryosphere Desert Data Center
 
+These raw datasets are preprocessed, spatially aligned, and integrated to form the final multi-channel input samples used in this study.
+
+--------
 
 5. License
 
