@@ -60,15 +60,17 @@ The same script is used for model evaluation, depending on the configuration and
 Data Availability
 
 The dataset used in this study is not fully publicly available due to regional data-sharing restrictions.
-However, a representative example data file is provided in the public code repository to illustrate the data structure and input format used by the proposed method.
 
-The complete dataset can be obtained from the corresponding author upon reasonable academic request.
+To facilitate data reuse and reproducibility, a representative example dataset (Data_instance.zip) is provided in the public repository to illustrate the exact input data structure, channel ordering, and file format required by the proposed method.
+
+Researchers interested in obtaining the full dataset for academic and non-commercial research purposes may contact the corresponding author via the email address provided in the manuscript. Requests will be considered on a reasonable academic basis.
 
 ⸻
 
 Data Format
 
 All input samples are stored as NumPy binary files (.npy) with a fixed spatial resolution of 1280 × 1280 pixels.
+
 Each sample consists of 8 channels, organized as follows:
 	1.	Channel 1: Digital Elevation Model (DEM)
 	2.	Channels 2–5: Four-band remote sensing imagery
@@ -78,13 +80,14 @@ Each sample consists of 8 channels, organized as follows:
 
 To ensure spatial consistency, all data layers are resampled or padded to a uniform size of 1280 × 1280 before being stacked into an 8-channel array.
 
-A representative example file (Data_instance.zip) is provided in the following repository as an example to demonstrate the exact data structure and channel ordering used in this study:
+File paths and corresponding class labels are organized using a .json file.
+The data are loaded through a custom PyTorch Dataset class implemented in the provided code.
+
+The example dataset (Data_instance.zip) is intended solely to demonstrate the expected data format and does not represent the full dataset used for model training and evaluation.
+
+Repository link:
 
 https://github.com/yeyeyeyeye-Liu/DSTENet.git
-
-This example data file is intended solely for illustrating the data format and does not represent the full dataset used for model training and evaluation.
-
-File paths and corresponding class labels are organized using a .json file, and the data are loaded through a custom Dataset class implemented in the provided code.
 
 ⸻
 
