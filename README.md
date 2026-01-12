@@ -12,8 +12,8 @@ currently under review at Computers & Geosciences.
 
 1. Environment
 
-- Python 3.10  
-- PyTorch 2.4.0  
+- Python 3.8  
+- PyTorch 1.11 
 
 The main dependencies are listed in `requirements.txt`.
 
