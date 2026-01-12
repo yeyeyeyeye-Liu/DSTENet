@@ -25,7 +25,7 @@ The required Python dependencies can be installed using:
 
 ```bash
 pip install -r requirements.txt
-```bash
+```
 
 --------
 
