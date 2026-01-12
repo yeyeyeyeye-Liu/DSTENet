@@ -55,7 +55,24 @@ The same script is used for model evaluation, depending on the configuration and
 
 --------
 
-4. Data Availability and Format
+4. Quick Demo (Minimal Running Example)
+
+To facilitate rapid understanding and reproducibility, a standalone demo script (demo.py) is provided.
+
+This script demonstrates:
+	•	How to load a representative multi-channel .npy input sample
+	•	How the input is preprocessed and forwarded through DSTENet
+	•	How to obtain a valid model output without training
+
+The demo can be executed directly using:
+```bash
+python demo.py
+```
+The demo uses a small example dataset included in Data_instance.zip and is intended as a basic usage example to verify that the code, model architecture, and data format are correctly configured.
+
+--------
+
+5. Data Availability and Format
 
 Data Availability
 
@@ -103,6 +120,6 @@ These raw datasets are preprocessed, spatially aligned, and integrated to form t
 
 --------
 
-5. License
+6. License
 
 This project is released under the MIT License. See the LICENSE file for details.
