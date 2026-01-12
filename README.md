@@ -41,11 +41,11 @@ Model training can be started by running:
 python DSTENet.py --batch_size 4 --max_epoch 200 --lr 0.0005
 ```
 Key training parameters include:
-	•	--batch_size: batch size for training (default: 4)
-	•	--max_epoch: number of training epochs (default: 200)
-	•	--lr: learning rate (default: 0.0005)
-	•	--num_workers: number of data loading workers (default: 2)
-	•	--class_num: number of output classes (default: 8)
+- batch_size: batch size for training (default: 4)
+- max_epoch: number of training epochs (default: 200)
+- lr: learning rate (default: 0.0005)
+- num_workers: number of data loading workers (default: 2)
+- class_num: number of output classes (default: 8)
 
 Testing / Evaluation
 The same script is used for model evaluation, depending on the configuration and checkpoint loading strategy defined in the code.
@@ -87,11 +87,11 @@ Data Format
 All input samples are stored as NumPy binary files (.npy) with a fixed spatial resolution of 1280 × 1280 pixels.
 
 Each sample consists of 8 channels, organized as follows:
-	1.	Channel 1: Digital Elevation Model (DEM)
-	2.	Channels 2–5: Four-band remote sensing imagery
-	3.	Channel 6: Lithology
-	4.	Channel 7: Soil
-	5.	Channel 8: Vegetation
+- 1.	Channel 1: Digital Elevation Model (DEM)
+- 2.	Channels 2–5: Four-band remote sensing imagery
+- 3.	Channel 6: Lithology
+- 4.	Channel 7: Soil
+- 5.	Channel 8: Vegetation
 
 To ensure spatial consistency, all data layers are resampled or padded to a uniform size of 1280 × 1280 before being stacked into an 8-channel array.
 
