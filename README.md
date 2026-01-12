@@ -78,7 +78,7 @@ Each sample consists of 8 channels, organized as follows:
 
 To ensure spatial consistency, all data layers are resampled or padded to a uniform size of 1280 × 1280 before being stacked into an 8-channel array.
 
-A representative example file (Data_instance.npy.zip) is provided in the following repository as an example to demonstrate the exact data structure and channel ordering used in this study:
+A representative example file (Data_instance.zip) is provided in the following repository as an example to demonstrate the exact data structure and channel ordering used in this study:
 
 https://github.com/yeyeyeyeye-Liu/DSTENet.git
 
