@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import argparse
 from torchvision.transforms import transforms
-from torchvision.models import resnet34
+from torchvision.ops import roi_align
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 
@@ -24,24 +24,24 @@ class SimpleDataset(Dataset):
         # Load data from numpy file
         data_path = Path(self.meta['data_path'][i])
         data = np.load(data_path, allow_pickle=True)
-
+        
         # Convert to tensor
         data = torch.from_numpy(data).float()
-
+        
         # Reshape/resize if necessary
+        # Resize large input patches (1280×1280) to 224×224 to match network input resolution
         if data.shape == (8, 1280, 1280):
             data = data.unsqueeze(0)
             data = F.interpolate(data, size=(224, 224), mode='bilinear', align_corners=False).squeeze(0)
         elif data.shape != (8, 224, 224):
             raise ValueError(f"Unexpected shape {data.shape} at index {i}")
-
+            
         data = self.transform_d(data)
         label = int(self.meta['data_labels'][i])
         return data, label
 
     def __len__(self):
         return len(self.meta['data_labels'])
-
 
 # Parameter configuration
 parser = argparse.ArgumentParser()
@@ -59,18 +59,16 @@ transform = transforms.Compose([
 
 # Create datasets and dataloaders
 train_dataset = SimpleDataset('./train4.json', transform)
-train_dataloader = DataLoader(train_dataset, batch_size=option.batch_size,
-                              shuffle=True, num_workers=option.num_workers)
+train_dataloader = DataLoader(train_dataset, batch_size=option.batch_size, 
+                             shuffle=True, num_workers=option.num_workers)
 
 test_dataset = SimpleDataset('./test4.json', transform)
-test_dataloader = DataLoader(test_dataset, batch_size=option.batch_size,
-                             shuffle=False, num_workers=option.num_workers)
-
+test_dataloader = DataLoader(test_dataset, batch_size=option.batch_size, 
+                            shuffle=False, num_workers=option.num_workers)
 
 # ===== DropPath Module =====
 class DropPath(nn.Module):
     """Stochastic depth regularization (drop path) for residual networks"""
-
     def __init__(self, drop_prob=0.1):
         super().__init__()
         self.drop_prob = drop_prob
@@ -83,11 +81,9 @@ class DropPath(nn.Module):
         random_tensor = keep_prob + torch.rand(shape, dtype=x.dtype, device=x.device)
         return x.div(keep_prob) * random_tensor.floor()
 
-
 # ===== Deformable RoI Pooling =====
 class DeformableRoIPooling(nn.Module):
     """Deformable Region of Interest Pooling with learnable offsets"""
-
     def __init__(self, in_channels, output_size, spatial_scale, gamma=0.1):
         super().__init__()
         self.output_size = output_size
@@ -121,11 +117,9 @@ class DeformableRoIPooling(nn.Module):
         deformed_grid = base_grid + offset_grid
         return F.grid_sample(pooled, deformed_grid, align_corners=True)
 
-
 # ===== PR2D Module (with DropPath) =====
 class PR2D(nn.Module):
     """Pyramidal Residual 2D block with deformable pooling option"""
-
     def __init__(self, in_channels, out_channels, stride=2, deformable=False, drop_prob=0.1):
         super().__init__()
         self.deformable = deformable
@@ -185,11 +179,9 @@ class PR2D(nn.Module):
             rois.append([i, 0, 0, w - 1, h - 1])
         return torch.tensor(rois, dtype=torch.float, device=x.device)
 
-
 # ===== ConvNeXt Block =====
 class ConvNeXtBlock(nn.Module):
     """Modern ConvNeXt-style block with depthwise convolution"""
-
     def __init__(self, dim, drop_prob=0.1):
         super().__init__()
         self.dwconv = nn.Conv2d(dim, dim, 7, padding=3, groups=dim)
@@ -210,11 +202,9 @@ class ConvNeXtBlock(nn.Module):
         x = x.permute(0, 3, 1, 2)
         return shortcut + self.drop_path(x)
 
-
 # ===== Transformer Bridge (Weighted Residual) =====
 class SpatialTransformer(nn.Module):
     """Transformer module for spatial feature enhancement"""
-
     def __init__(self, dim, num_heads=4, num_layers=1):
         super().__init__()
         encoder_layer = nn.TransformerEncoderLayer(d_model=dim, nhead=num_heads, batch_first=True)
@@ -228,11 +218,9 @@ class SpatialTransformer(nn.Module):
         trans_out = trans_out.transpose(1, 2).view(B, C, H, W)
         return x + self.gamma * trans_out  # Weighted residual connection
 
-
 # ===== Main Backbone Network =====
 class DSTENet(nn.Module):
     """Main network architecture for 8-class classification"""
-
     def __init__(self, feature_dim=256, use_deformable=True):
         super().__init__()
         # Initial preprocessing
@@ -281,7 +269,6 @@ class DSTENet(nn.Module):
         x = self.refinement(x)
         return self.classifier(x)
 
-
 # Device setup
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = DSTENet(feature_dim=256, use_deformable=True).to(device)
@@ -305,7 +292,9 @@ from sklearn.metrics import (
     cohen_kappa_score
 )
 
-# Main training loop
+# ============================
+# Main Training Loop
+# ============================
 for epoch in range(1, option.max_epoch + 1):
     # ===== Training Phase =====
     model.train()
@@ -357,15 +346,15 @@ for epoch in range(1, option.max_epoch + 1):
     kappa = cohen_kappa_score(all_labels, all_preds)
 
     # ===== Display Metrics =====
-    print(f'\n📊 Test Metrics at Epoch {epoch}:')
-    print(f'  🔹 Test Acc (OA):   {test_acc:.3f}%')
-    print(f'  🔹 Test Loss:       {loss_test:.5f}')
-    print(f'  🔹 Macro F1 Score:  {f1:.4f}')
-    print(f'  🔹 Macro Precision: {precision:.4f}')
-    print(f'  🔹 Macro Recall (AA): {recall:.4f}')
-    print(f'  🔹 Kappa Score:     {kappa:.4f}')
-    print('  🔹 Classification Report:\n', classification_report(all_labels, all_preds, digits=4))
-    print('  🔹 Confusion Matrix:\n', confusion_matrix(all_labels, all_preds))
+    print(f'\n[Test] Metrics at Epoch {epoch}:')
+    print(f'  Test Acc (OA):   {test_acc:.3f}%')
+    print(f'  Test Loss:       {loss_test:.5f}')
+    print(f'  Macro F1 Score:  {f1:.4f}')
+    print(f'  Macro Precision: {precision:.4f}')
+    print(f'  Macro Recall (AA): {recall:.4f}')
+    print(f'  Kappa Score:     {kappa:.4f}')
+    print('  Classification Report:\n', classification_report(all_labels, all_preds, digits=4))
+    print('  Confusion Matrix:\n', confusion_matrix(all_labels, all_preds))
 
     # ===== Log Metrics =====
     log_test_acc.append(round(test_acc, 3))
@@ -383,9 +372,8 @@ for epoch in range(1, option.max_epoch + 1):
         log_best_pred = all_preds
         log_test_real = all_labels
         torch.save(model.state_dict(), 'DSTENet_best.pth')
-        print(f'\n✅ Saved best model at epoch {epoch} with test acc {test_acc:.2f}%')
+        print(f'\nSaved best model at epoch {epoch} with test acc {test_acc:.2f}%')
 
 # ===== Training Complete =====
-print(
-    f'\n🏁 Training complete. Best model at epoch {log_best_epoch} with test acc {log_best_acc:.2f}%. '
-    f'Saved as DSTENet_best.pth')
+print(f'\nTraining complete. Best model at epoch {log_best_epoch} with test acc {log_best_acc:.2f}%. '
+      f'Saved as DSTENet_best.pth')
