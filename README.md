@@ -6,7 +6,7 @@ The code corresponds to the following paper:
 
 A Deformable RoI Pooling and ConvNeXt–Transformer Integrated Approach for Identifying Hazard-Prone Areas of Gully-Type Debris Flows: A Case Study in Typical Regions of Yunnan, China
 
-under review at *Computers & Geosciences*.
+currently under review at Computers & Geosciences.
 
 --------
 
@@ -36,7 +36,10 @@ The implementation of the DSTENet model, as well as the training and testing pro
 Training
 
 Model training can be started by running:
+```bash
 python DSTENet.py --batch_size 4 --max_epoch 200 --lr 0.0005
+```
+
 
 
 Key training parameters include:
@@ -75,7 +78,7 @@ Each sample consists of 8 channels, organized as follows:
 
 To ensure spatial consistency, all data layers are resampled or padded to a uniform size of 1280 × 1280 before being stacked into an 8-channel array.
 
-A representative example file (Data_instance.npy.zip) is publicly available at the following repository to demonstrate the exact data structure and channel ordering used in this study:
+A representative example file (Data_instance.npy.zip) is provided in the following repository as an example to demonstrate the exact data structure and channel ordering used in this study:
 
 https://github.com/yeyeyeyeye-Liu/DSTENet.git
 
